@@ -160,6 +160,21 @@
                 <textarea class="form-control" th:field="*{description}" placeholder="Nhập mô tả chi tiết sản phẩm..."></textarea>
             </div>
 
+
+            <!-- Category -->
+            <div class="form-group">
+                <label class="form-label">Danh mục sản phẩm</label>
+                <select class="form-select" th:field="*{category.id}">
+                    <option value="">-- Chọn danh mục --</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}">
+                    </option>
+                </select>
+                <div class="price-helper" th:if="${categories.isEmpty()}">⚠️ Chưa có danh mục nào, sản phẩm sẽ ở trạng thái chưa phân loại.</div>
+            </div>
+
+            
             <!-- Image URL -->
             <div class="form-group">
                 <label class="form-label">Link hình ảnh sản phẩm</label>
