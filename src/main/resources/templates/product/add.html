@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm sản phẩm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+            display: block;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            padding: 12px 15px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-control:focus, .form-select:focus {
+            outline: none;
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            border: 2px solid #d32f2f;
+        }
+
+        .image-preview.show {
+            display: block;
+        }
+
+        .price-helper {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .btn-submit, .btn-cancel {
+            flex: 1;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #d32f2f 0%, #ff5252 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-cancel {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d0d0d0;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="form-title">➕ Thêm sản phẩm mới</h2>
+
+        <form th:action="@{/products/add}" method="post" th:object="${product}" enctype="multipart/form-data">
+            <!-- Product Name -->
+            <div class="form-group">
+                <label class="form-label">Tên sản phẩm <span class="required">*</span></label>
+                <input type="text" class="form-control" th:field="*{name}" placeholder="Nhập tên sản phẩm" required>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label class="form-label">Giá (VND) <span class="required">*</span></label>
+                <input type="number" class="form-control" th:field="*{price}" step="0.01" placeholder="0" min="0" required>
+                <div class="price-helper">💡 Nhập giá bán của sản phẩm</div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label class="form-label">Mô tả sản phẩm</label>
+                <textarea class="form-control" th:field="*{description}" placeholder="Nhập mô tả chi tiết sản phẩm..."></textarea>
+            </div>
+
+            <!-- Image URL -->
+            <div class="form-group">
+                <label class="form-label">Link hình ảnh sản phẩm</label>
+                <input type="text" class="form-control" th:field="*{imageUrl}" placeholder="https://example.com/image.jpg" onchange="previewImage(this.value)">
+                <img id="imagePreview" class="image-preview" alt="Preview">
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    💾 Lưu sản phẩm
+                </button>
+                <a href="/products" class="btn-cancel">
+                    ⬅️ Quay lại
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function previewImage(url) {
+            if (url.trim()) {
+                const img = document.getElementById('imagePreview');
+                img.src = url;
+                img.classList.add('show');
+                img.onerror = function() {
+                    this.classList.remove('show');
+                };
+            }
+        }
+    </script>
+</body>
+</html>
