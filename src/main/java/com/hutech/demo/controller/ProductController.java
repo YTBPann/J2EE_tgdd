@@ -25,11 +25,15 @@ public class ProductController {
 
     // Hiển thị danh sách sản phẩm
     @GetMapping
-    public String list(Model model) {
-        List<Product> products = productRepository.findAll();
+    public String list(@RequestParam(required = false) Long categoryId, Model model) {
+        List<Category> categories = categoryRepository.findAll();
+        List<Product> products = categoryId == null
+                ? productRepository.findAll()
+                : productRepository.findByCategoryId(categoryId);
+
         Map<String, List<Product>> productsByCategory = new LinkedHashMap<>();
 
-        categoryRepository.findAll().forEach(category -> {
+        categories.forEach(category -> {
             List<Product> productsInCategory = products.stream()
                     .filter(product -> product.getCategory() != null
                             && category.getId().equals(product.getCategory().getId()))
@@ -47,6 +51,8 @@ public class ProductController {
         }
 
         model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
+        model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("productsByCategory", productsByCategory);
         return "product/list";
     }
