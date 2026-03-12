@@ -117,9 +117,6 @@ public class CartController {
         session.setAttribute(CART_SESSION_KEY, new HashMap<Long, Integer>());
         return "redirect:/cart";
     }
-        session.setAttribute(CART_SESSION_KEY, new HashMap<Long, Integer>());
-        return "redirect:/cart";
-    }
 
     private void restorePromotionQuantity(Long productId, int quantityToRestore) {
         if (quantityToRestore <= 0) {

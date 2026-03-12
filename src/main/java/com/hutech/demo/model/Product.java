@@ -1,6 +1,6 @@
 package com.hutech.demo.model;
 
-import java.util.Locale.Category;
+import com.hutech.demo.model.Category;
 
 import jakarta.persistence.*;
 import lombok.*;

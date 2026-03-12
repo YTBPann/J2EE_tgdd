@@ -498,15 +498,25 @@
                                      th:text="'SL khuyến mãi còn: ' + ${p.promotionQuantity}"></div>
 
                                 <div class="product-actions">
-                                    <form th:action="@{'/cart/add/' + ${p.id}}" method="post" style="flex: 1;">
-                                        <button type="submit" class="btn-small btn-buy" style="width: 100%;" th:disabled="${p.promotionQuantity <= 0}">🛒 Thêm giỏ</button>
-                                    </form>
-                                    <a th:href="@{'/products/edit/' + ${p.id}}" class="btn-small btn-edit">✏️ Sửa</a>
-                                    <form th:action="@{'/products/delete/' + ${p.id}}" method="post" style="flex: 1;">
-                                        <button type="submit" class="btn-small btn-delete w-100" onclick="return confirm('Xóa sản phẩm này?')" style="width: 100%;">🗑️ Xóa</button>
-                                    </form>
-                                </div>
-                            </div>
+                                    <form th:action="@{/cart/add/{id}(id=${p.id})}" method="post" style="flex:1;">
+                                <button type="submit"
+                                        class="btn-small btn-buy"
+                                        style="width:100%"
+                                        th:disabled="${p.promotionQuantity <= 0}">
+                                    🛒 Thêm giỏ
+                                </button>
+                            </form>
+
+                            <a th:href="@{/products/edit/{id}(id=${p.id})}" class="btn-small btn-edit">✏️ Sửa</a>
+
+                            <form th:action="@{/products/delete/{id}(id=${p.id})}" method="post" style="flex:1;">
+                                <button type="submit"
+                                        class="btn-small btn-delete"
+                                        style="width:100%"
+                                        onclick="return confirm('Xóa sản phẩm này?')">
+                                    🗑️ Xóa
+                                </button>
+                            </form>
 
                         </div>
                     </div>
