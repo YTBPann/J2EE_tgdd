@@ -4,10 +4,72 @@
 <body>
 
 <div th:replace="~{layout :: content}">
+    
+    <div>
 
-<h2>🛒 Giỏ hàng</h2>
+        <h2 class="mb-4">🛒 Giỏ hàng</h2>
 
-<p>Trang giỏ hàng đang hoạt động.</p>
+        <div th:if="${cartItems.isEmpty()}">
+
+            <h4>Giỏ hàng trống</h4>
+
+            <a th:href="@{/products}" class="btn btn-primary">
+                Tiếp tục mua hàng
+            </a>
+
+        </div>
+
+        <div th:if="${!cartItems.isEmpty()}">
+
+            <table class="table table-bordered">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="item : ${cartItems}">
+
+                        <td th:text="${item.product.name}"></td>
+                        <td th:text="${item.product.price}"></td>
+                        <td th:text="${item.quantity}"></td>
+                        <td th:text="${item.lineTotal}"></td>
+
+                        <td>
+
+                            <form th:action="@{'/cart/remove/' + ${item.product.id}}" method="post">
+
+                                <button class="btn btn-danger btn-sm">
+                                    Xóa
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+            <h4 class="text-end">
+
+                Tổng tiền:
+                <span th:text="${grandTotal}"></span>
+
+            </h4>
+
+        </div>
+
+    </div>
 
 </div>
 

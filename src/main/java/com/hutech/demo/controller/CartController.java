@@ -99,10 +99,15 @@ public class CartController {
 
     @SuppressWarnings("unchecked")
     private Map<Long, Integer> getCart(HttpSession session) {
-        Object cartObj = session.getAttribute(CART_SESSION_KEY);
-        if (cartObj instanceof Map<?, ?>) {
-            return (Map<Long, Integer>) cartObj;
+
+        Map<Long, Integer> cart =
+                (Map<Long, Integer>) session.getAttribute(CART_SESSION_KEY);
+
+        if (cart == null) {
+            cart = new HashMap<>();
+            session.setAttribute(CART_SESSION_KEY, cart);
         }
-        return new HashMap<>();
+
+        return cart;
     }
 }
