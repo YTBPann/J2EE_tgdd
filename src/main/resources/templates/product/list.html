@@ -494,9 +494,12 @@
                                 <div style="font-size: 12px; color: #666; margin-bottom: 8px;"
                                      th:text="'Danh mục: ' + ${categoryEntry.key}"></div>
 
+                                <div style="font-size: 12px; color: #d32f2f; margin-bottom: 8px; font-weight: 600;"
+                                     th:text="'SL khuyến mãi còn: ' + ${p.promotionQuantity}"></div>
+
                                 <div class="product-actions">
                                     <form th:action="@{'/cart/add/' + ${p.id}}" method="post" style="flex: 1;">
-                                        <button type="submit" class="btn-small btn-buy" style="width: 100%;">🛒 Thêm giỏ</button>
+                                        <button type="submit" class="btn-small btn-buy" style="width: 100%;" th:disabled="${p.promotionQuantity <= 0}">🛒 Thêm giỏ</button>
                                     </form>
                                     <a th:href="@{'/products/edit/' + ${p.id}}" class="btn-small btn-edit">✏️ Sửa</a>
                                     <form th:action="@{'/products/delete/' + ${p.id}}" method="post" style="flex: 1;">

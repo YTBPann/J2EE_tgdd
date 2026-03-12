@@ -1,5 +1,7 @@
 package com.hutech.demo.model;
 
+import java.util.Locale.Category;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +26,9 @@ public class Product {
 
     @Column(columnDefinition = "LONGTEXT")
     private String imageUrl;
+
+    @Column(nullable = false)
+    private int promotionQuantity = 0;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

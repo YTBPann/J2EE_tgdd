@@ -28,8 +28,15 @@ public class CartController {
 
     @PostMapping("/cart/add/{productId}")
     public String addToCart(@PathVariable Long productId, HttpSession session) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null || product.getPromotionQuantity() <= 0) {
+            return "redirect:/products";
+        }
+
         Map<Long, Integer> cart = getCart(session);
         cart.merge(productId, 1, Integer::sum);
+        product.setPromotionQuantity(product.getPromotionQuantity() - 1);
+        productRepository.save(product);
         session.setAttribute(CART_SESSION_KEY, cart);
         return "redirect:/products";
     }
@@ -62,8 +69,13 @@ public class CartController {
     public String increaseQuantity(@PathVariable Long productId, HttpSession session) {
         Map<Long, Integer> cart = getCart(session);
         if (cart.containsKey(productId)) {
-            cart.merge(productId, 1, Integer::sum);
-            session.setAttribute(CART_SESSION_KEY, cart);
+            Product product = productRepository.findById(productId).orElse(null);
+            if (product != null && product.getPromotionQuantity() > 0) {
+                cart.merge(productId, 1, Integer::sum);
+                product.setPromotionQuantity(product.getPromotionQuantity() - 1);
+                productRepository.save(product);
+                session.setAttribute(CART_SESSION_KEY, cart);
+            }
         }
         return "redirect:/cart";
     }
@@ -78,6 +90,7 @@ public class CartController {
             } else {
                 cart.put(productId, updated);
             }
+            restorePromotionQuantity(productId, 1);            
             session.setAttribute(CART_SESSION_KEY, cart);
         }
         return "redirect:/cart";
@@ -86,15 +99,37 @@ public class CartController {
     @PostMapping("/cart/remove/{productId}")
     public String removeItem(@PathVariable Long productId, HttpSession session) {
         Map<Long, Integer> cart = getCart(session);
+        int removedQuantity = cart.getOrDefault(productId, 0);
         cart.remove(productId);
+        if (removedQuantity > 0) {
+            restorePromotionQuantity(productId, removedQuantity);
+        }
         session.setAttribute(CART_SESSION_KEY, cart);
         return "redirect:/cart";
     }
 
     @PostMapping("/cart/clear")
     public String clearCart(HttpSession session) {
+        Map<Long, Integer> cart = getCart(session);
+        for (Map.Entry<Long, Integer> entry : cart.entrySet()) {
+            restorePromotionQuantity(entry.getKey(), entry.getValue());
+        }
         session.setAttribute(CART_SESSION_KEY, new HashMap<Long, Integer>());
         return "redirect:/cart";
+    }
+        session.setAttribute(CART_SESSION_KEY, new HashMap<Long, Integer>());
+        return "redirect:/cart";
+    }
+
+    private void restorePromotionQuantity(Long productId, int quantityToRestore) {
+        if (quantityToRestore <= 0) {
+            return;
+        }
+
+        productRepository.findById(productId).ifPresent(product -> {
+            product.setPromotionQuantity(product.getPromotionQuantity() + quantityToRestore);
+            productRepository.save(product);
+        });
     }
 
     @SuppressWarnings("unchecked")
