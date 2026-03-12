@@ -435,13 +435,16 @@
 
     <!-- NAVIGATION -->
     <nav class="navigation">
-        <a href="#phones">📱 Điện thoại</a>
-        <a href="#laptops">💻 Laptop</a>
-        <a href="#accessories">🎧 Phụ kiện</a>
-        <a href="#tablets">📲 Máy tính bảng</a>
-        <a href="#smartwatch">⌚ Đồng hồ</a>
-        <a href="#audio">🔊 Âm thanh</a>
-        <a href="#deals">🏷️ Khuyến mãi</a>
+        <a th:href="@{/products}"
+           th:classappend="${selectedCategoryId == null} ? 'active' : ''">
+            🏠 Tất cả
+        </a>
+        <a th:each="category : ${categories}"
+           th:href="@{/products(categoryId=${category.id})}"
+           th:text="${category.name}"
+           th:classappend="${selectedCategoryId != null and selectedCategoryId == category.id} ? 'active' : ''">
+            Danh mục
+        </a>
     </nav>
 <!-- MAIN BANNER -->
 <section style="margin: 20px; border-radius: 8px; overflow: hidden;">
