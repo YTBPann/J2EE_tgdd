@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -40,7 +41,7 @@ public class ProductController {
             List<Product> productsInCategory = products.stream()
                     .filter(product -> product.getCategory() != null
                             && category.getId().equals(product.getCategory().getId()))
-                    .toList();
+                    .collect(Collectors.toList());
             if (!productsInCategory.isEmpty()) {
                 productsByCategory.put(category.getName(), productsInCategory);
             }
@@ -104,9 +105,11 @@ public class ProductController {
     @SuppressWarnings("unchecked")
     private int getCartItemCount(HttpSession session) {
         Object cartObj = session.getAttribute("CART");
-        if (!(cartObj instanceof Map<?, ?> cartMap)) {
+        if (!(cartObj instanceof Map<?, ?>)) {
             return 0;
         }
-        return ((Map<Long, Integer>) cartMap).values().stream().mapToInt(Integer::intValue).sum();
+
+        Map<Long, Integer> cartMap = (Map<Long, Integer>) cartObj;
+        return cartMap.values().stream().mapToInt(Integer::intValue).sum();
     }
 }

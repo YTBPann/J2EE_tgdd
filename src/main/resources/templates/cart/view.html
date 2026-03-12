@@ -46,19 +46,19 @@
             </thead>
             <tbody>
             <tr th:each="item : ${cartItems}">
-                <td th:text="${item.product().name}"></td>
-                <td th:text="${#numbers.formatDecimal(item.product().price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+                <td th:text="${item.product.name}"></td>
+                <td th:text="${#numbers.formatDecimal(item.product.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
                 <td th:text="${item.quantity}"></td>
                 <td th:text="${#numbers.formatDecimal(item.lineTotal, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
                 <td>
                     <div class="actions">
-                        <form th:action="@{'/cart/decrease/' + ${item.product().id}}" method="post">
+                        <form th:action="@{'/cart/decrease/' + ${item.product.id}}" method="post">
                             <button type="submit" class="btn btn-dec">-</button>
                         </form>
-                        <form th:action="@{'/cart/increase/' + ${item.product().id}}" method="post">
+                        <form th:action="@{'/cart/increase/' + ${item.product.id}}" method="post">
                             <button type="submit" class="btn btn-inc">+</button>
                         </form>
-                        <form th:action="@{'/cart/remove/' + ${item.product().id}}" method="post">
+                        <form th:action="@{'/cart/remove/' + ${item.product.id}}" method="post">
                             <button type="submit" class="btn btn-remove">Xóa</button>
                         </form>
                     </div>
