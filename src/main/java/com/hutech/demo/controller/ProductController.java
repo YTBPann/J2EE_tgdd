@@ -4,12 +4,15 @@ import com.hutech.demo.model.Product;
 import com.hutech.demo.model.Category;
 import com.hutech.demo.repository.CategoryRepository;
 import com.hutech.demo.repository.ProductRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 @Controller
 @RequestMapping("/products")
@@ -25,7 +28,7 @@ public class ProductController {
 
     // Hiển thị danh sách sản phẩm
     @GetMapping
-    public String list(@RequestParam(required = false) Long categoryId, Model model) {
+    public String list(@RequestParam(required = false) Long categoryId, Model model, HttpSession session) {
         List<Category> categories = categoryRepository.findAll();
         List<Product> products = categoryId == null
                 ? productRepository.findAll()
@@ -54,6 +57,7 @@ public class ProductController {
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("productsByCategory", productsByCategory);
+        model.addAttribute("cartItemCount", getCartItemCount(session));        
         return "product/list";
     }
 
@@ -95,5 +99,14 @@ public class ProductController {
     public String delete(@PathVariable Long id) {
         productRepository.deleteById(id);
         return "redirect:/products";
+    }
+
+    @SuppressWarnings("unchecked")
+    private int getCartItemCount(HttpSession session) {
+        Object cartObj = session.getAttribute("CART");
+        if (!(cartObj instanceof Map<?, ?> cartMap)) {
+            return 0;
+        }
+        return ((Map<Long, Integer>) cartMap).values().stream().mapToInt(Integer::intValue).sum();
     }
 }

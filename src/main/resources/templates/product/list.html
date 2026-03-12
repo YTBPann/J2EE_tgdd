@@ -429,7 +429,7 @@
         </div>
         <div class="header-right">
             <a href="#login">👤 Đăng nhập</a>
-            <a href="#cart">🛒 Giỏ hàng</a>
+            <a th:href="@{/cart}">🛒 Giỏ hàng (<span th:text="${cartItemCount}">0</span>)</a>
         </div>
     </header>
 
@@ -495,7 +495,9 @@
                                      th:text="'Danh mục: ' + ${categoryEntry.key}"></div>
 
                                 <div class="product-actions">
-                                    <button class="btn-small btn-buy">🛒 Mua</button>
+                                    <form th:action="@{'/cart/add/' + ${p.id}}" method="post" style="flex: 1;">
+                                        <button type="submit" class="btn-small btn-buy" style="width: 100%;">🛒 Thêm giỏ</button>
+                                    </form>
                                     <a th:href="@{'/products/edit/' + ${p.id}}" class="btn-small btn-edit">✏️ Sửa</a>
                                     <form th:action="@{'/products/delete/' + ${p.id}}" method="post" style="flex: 1;">
                                         <button type="submit" class="btn-small btn-delete w-100" onclick="return confirm('Xóa sản phẩm này?')" style="width: 100%;">🗑️ Xóa</button>
